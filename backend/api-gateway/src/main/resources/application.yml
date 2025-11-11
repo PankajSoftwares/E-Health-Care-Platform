@@ -1,0 +1,86 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - StripPrefix=2
+
+        - id: patient-service
+          uri: lb://patient-service
+          predicates:
+            - Path=/api/v1/patients/**
+          filters:
+            - StripPrefix=2
+            - AuthenticationFilter
+
+        - id: doctor-service
+          uri: lb://doctor-service
+          predicates:
+            - Path=/api/v1/doctors/**
+          filters:
+            - StripPrefix=2
+            - AuthenticationFilter
+
+        - id: appointment-service
+          uri: lb://appointment-service
+          predicates:
+            - Path=/api/v1/appointments/**
+          filters:
+            - StripPrefix=2
+            - AuthenticationFilter
+
+        - id: billing-service
+          uri: lb://billing-service
+          predicates:
+            - Path=/api/v1/bills/**
+          filters:
+            - StripPrefix=2
+            - AuthenticationFilter
+
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+          filters:
+            - StripPrefix=2
+            - AuthenticationFilter
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.ehealth: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

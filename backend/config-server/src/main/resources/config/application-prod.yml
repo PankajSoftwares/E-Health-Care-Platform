@@ -1,0 +1,24 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/ehealthcare_prod}
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URI:http://localhost:8761/eureka/}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+logging:
+  level:
+    com.ehealth: INFO
+    org.springframework.security: WARN
+    org.springframework.web: WARN

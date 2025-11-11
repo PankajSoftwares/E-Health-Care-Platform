@@ -1,0 +1,38 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+        git:
+          uri: https://github.com/your-org/ehealthcare-config.git
+          search-paths: '{application}'
+          default-label: main
+          username: ${CONFIG_GIT_USERNAME:}
+          password: ${CONFIG_GIT_PASSWORD:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true
+
+logging:
+  level:
+    com.ehealth: INFO
+    org.springframework.cloud: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
